@@ -22,8 +22,16 @@
 #include <QGridLayout>
 #include <QLineEdit>
 #include <QLabel>
+#include <QKeyEvent>
 
 namespace UDJ{
+
+bool LibraryWidget::eventFilter(QObject *obj, QEvent *event) {
+  if (obj->inherits("QLineEdit") && event->type() == QEvent::KeyRelease)
+    return true;
+  else
+    return false;
+}
 
 LibraryWidget::LibraryWidget(DataStore* dataStore, QWidget* parent):
   QWidget(parent),
@@ -31,6 +39,9 @@ LibraryWidget::LibraryWidget(DataStore* dataStore, QWidget* parent):
 {
   libraryView = new LibraryView(dataStore, this);
   searchEdit = new QLineEdit(this);
+
+  searchEdit->installEventFilter(this);
+
   QLabel *searchLabel = new QLabel(tr("Search:"),this);
 
   setFocusPolicy(Qt::TabFocus);
